@@ -2,7 +2,7 @@
 
 An exploratory Jupyter notebook that implements and compares several federated learning algorithms (FedAvg, FedOpt, FedProx) on the MNIST dataset and contrasts them with a centralized baseline. This repository is experimental / educational — intended to demonstrate algorithmic behaviour under label-heterogeneous (non‑IID) partitions rather than production-ready code or deployments.
 
-Notebook
+## Notebook
 - FL-pytorch.ipynb — single notebook containing the full experiment pipeline:
   - data download / preprocessing (MNIST)
   - centralized baseline training and evaluation
@@ -13,13 +13,13 @@ Notebook
 You can view the notebook here:
 https://github.com/Aditya2814/Federated-Learning-Algorithms-on-MNIST-Dataset/blob/main/FL-pytorch.ipynb
 
-Summary of what the work shows
+## Summary of what the work shows
 - A compact convolutional classifier is trained centrally and via simple federated simulations.
 - The dataset is partitioned deliberately to create strong heterogeneity: each simulated client holds only two digit classes (e.g., client1: {0,1}, client2: {2,3}, ...).
 - Under this label-skewed partitioning, FedAvg performance drops compared to the centralized baseline. FedOpt (a simple server-optimizer style simulation) and FedProx (proximal regularization in local objectives) are evaluated and partially recover performance.
 - The notebook prints evaluation numbers and draws training-loss plots so you can inspect convergence and comparative behaviour.
 
-Key numeric results (from the notebook runs)
+## Key numeric results (from the notebook runs)
 | Experiment | Test loss | Test accuracy |
 |---|---:|---:|
 | Centralized baseline | ~0.2195 | ~93.83% |
@@ -27,12 +27,12 @@ Key numeric results (from the notebook runs)
 | FedOpt (simulated) | ~0.6654 | ~79.21% |
 | FedProx (mu=0.01) | ~0.5489 | ~83.60% |
 
-High-level interpretation
+## High-level interpretation
 - The centralized model (trained on all MNIST data) achieves the best results as expected.
 - The extreme non‑IID (label-skewed) partition used here strongly harms FedAvg — averaging client parameters is not enough when local objectives differ substantially.
 - FedOpt and FedProx, as implemented in the notebook, mitigate some of the degradation; FedProx performs best among the federated variants in this experiment. These outcomes qualitatively match expectations from federated learning literature: heterogeneity breaks naive averaging, and server-side optimizers or proximal corrections can help.
 
-Model and experiment details (concise)
+## Model and experiment details (concise)
 - Dataset
   - MNIST (torchvision), transforms: ToTensor() and Normalize((0.5,), (0.5,))
 - Model (PyTorch nn.Module)
@@ -49,7 +49,7 @@ Model and experiment details (concise)
     - FedOpt: simulated by aggregating parameter differences and applying a server-side update (illustrative)
     - FedProx: local objective augmented with (mu/2) * ||w_local − w_server||^2, mu=0.01
 
-Limitations and important notes
+## Limitations and important notes
 - This project is intentionally experimental:
   - The federated setup is simulated inside a single process — there is no networking, secure aggregation, client dropouts, or real federation infrastructure.
   - FedOpt is implemented as a conceptual simulation (parameter differences treated as pseudo-gradients) — not a production FedOpt implementation.
@@ -57,33 +57,22 @@ Limitations and important notes
   - Hyperparameters and random seeds are not exhaustively tuned; results illustrate trends rather than definitive benchmarks.
 - The partitioning is extreme (each client has only two classes) to amplify heterogeneity effects; other partitioning strategies will produce different behaviours.
 
-What you can learn from the repository
+## What you can learn from the repository
 - How to implement a minimal PyTorch classifier and training loop for MNIST.
 - How to simulate simple federated workflows in a single notebook (model copying, local training, server aggregation).
 - Insight into how non‑IID data affects federated learning and how simple algorithmic choices (server optimizers, proximal regularizers) can mitigate the effect.
 - A starting point for deeper experiments (more clients, different heterogeneity models, alternative aggregators, reproducibility).
 
-Possible follow-ups / extensions
+## Possible follow-ups / extensions
 - Add a more realistic federated infrastructure (multiple processes or frameworks such as Flower, PySyft or TensorFlow Federated).
 - Implement proper server optimizers (FedAdam, FedYogi) and compare rigorously.
 - Evaluate additional heterogeneity types (quantity skew, feature shift) and run multiple seeds to report confidence intervals.
 - Add experiment logging, checkpoints, and reproducibility (deterministic transforms and fixed seeds).
 - Introduce client sampling, compression, privacy (differential privacy), and secure aggregation.
 
-References
-- McMahan, H. B., et al., "Communication-Efficient Learning of Deep Networks from Decentralized Data" (FedAvg), arXiv:1602.05629
-- Li, T., et al., "Federated Optimization in Heterogeneous Networks" (FedProx), arXiv:1812.06127
-- Surveys and implementations of federated optimization and system-level frameworks (e.g., Flower, TensorFlow Federated)
-
-Contact / author
+## Contact / author
 - Repository: Aditya2814/Federated-Learning-Algorithms-on-MNIST-Dataset
 - If you have questions or want to discuss experiments, open an issue in the repository.
 
-License
+## License
 - No license file is included in this repository. If you intend for reuse, add a license (MIT, Apache-2.0, etc.).
-
----
-
-If you want, I can:
-- Add a minimal "Reproducibility notes" section with just the exact hyperparameters used (keeps README focused on the work).
-- Produce a short results table image (PNG) with the numbers and a brief figure caption to embed in the README.
